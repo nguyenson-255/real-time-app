@@ -1,16 +1,32 @@
 name: 'ToDo App RealTime'
 services:
+  fe:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - BASE_URL='api'
+    depends_on:
+      - api
+      - postgres_app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/son/src/FE-app
+      - /son/src/FE-app/node_modules/
   api:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    restart: always
     depends_on:
       - postgres_app
     environment:
       - PORT=3001
       - DATABASE_PASSWORD=ns
     volumes:
-      - ./backend/node_modules:/son/src/app
+      - ./backend:/son/src/app
       - /son/src/app/node_modules/
     ports:
       - "3001:3001"
