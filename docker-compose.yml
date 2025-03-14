@@ -1,0 +1,29 @@
+name: 'ToDo App RealTime'
+services:
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres_app
+    environment:
+      - PORT=3001
+      - DATABASE_PASSWORD=ns
+    volumes:
+      - ./backend/node_modules:/son/src/app
+      - /son/src/app/node_modules/
+    ports:
+      - "3001:3001"
+    # command: ["npm", "run", "start:dev"]
+  postgres_app:
+    image: postgres:15
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=ns
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data  # Correct usage of named volume
+
+volumes:
+  db_data:  # Define named volume correctly
