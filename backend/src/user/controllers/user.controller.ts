@@ -1,34 +1,40 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { CreateUserDto } from '../dto/create-user.dto';
-import { UpdateUserDto } from '../dto/update-user.dto';
+import { DtoHelperService } from '../services/dto-help.service';
+import { UserI } from '../interfaces/user.interfaces';
+import { LoginDto } from '../dto/login.dto';
+import { LoginResponseI } from '../interfaces/login-response.interfaces';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private dtoHelperService: DtoHelperService
+  ) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto): Promise<UserI> {
+    const user: UserI  = this.dtoHelperService.createDtoToEntites(createUserDto);
+    return this.userService.create(user);
+  }
+
+  @Post('/login')
+  async login(@Body() loginDto: LoginDto): Promise<LoginResponseI> {
+    const loginEntites = this.dtoHelperService.loginDtoToEntites(loginDto);
+    const jwt: string =  await this.userService.login(loginEntites);
+
+    return {
+      accessToken: jwt,
+      tokenType: 'JWT',
+      expiresIn: '1d'
+    }
   }
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  @UseGuards(new JwtAuthGuard())
+  getProfile() {
+    return 'aaaa'
   }
 }

@@ -1,1 +1,23 @@
-export class User {}
+import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+
+@Entity()
+export class User {
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
+
+    @Column({unique: true})
+    email: string;
+
+    @Column({unique: true})
+    username: string;
+
+    @Column({select: false})
+    password: string;
+
+    @BeforeInsert()
+    @BeforeUpdate()
+    emailAndUsernameToLowcase() {
+        this.email = this.email.toLowerCase();
+        this.username = this.username.toLowerCase();
+    }
+}
