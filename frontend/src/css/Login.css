@@ -1,0 +1,17 @@
+form{
+    width: 30%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+input {
+    height: 2em;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
