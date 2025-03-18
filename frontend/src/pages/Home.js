@@ -6,7 +6,7 @@ export default function Home() {
 
   useEffect(()=>{
     api
-      .get("/api/users/1") // Fetch data from the API
+      .get("/api/users/") // Fetch data from the API
       .then((response) => {
         setData(response.data);
         setLoading(false);

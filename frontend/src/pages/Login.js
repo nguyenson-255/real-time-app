@@ -1,73 +1,94 @@
-import React, { useState }  from 'react';
+import React, { useEffect, useState } from 'react';
 import '../css/Login.css'
-import {Link} from "react-router-dom";
-import api from '../api/api'
-import { Button, IconButton, Input, Snackbar } from '../../node_modules/@mui/material/index';
+import { Link, useNavigate } from "react-router-dom";
+import { Alert, Button, Snackbar, TextField, Typography } from '../../node_modules/@mui/material/index';
+import { login } from '../services/authService';
+import { useAuth } from '../uttil/AuthContext';
 
 export default function Login() {
 
+  const { token, loginToken } = useAuth();
+
+  let navigate = useNavigate();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  useEffect(() => {
+    if (token) {
+      navigate('/', { replace: true });
+    }
+  }, [token, loginToken]);
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const action = (
-    <React.Fragment>
-      <Button color="secondary" size="small" onClick={handleClose}>
-        UNDO
-      </Button>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleClose}
-      >
-      </IconButton>
-    </React.Fragment>
-  );
+  const HandleLogin = async () => {
 
-  const HandleLogin = () => {
-    
-    api.post('/api/users/login', {
-      email: email,
-      password: password
-    })
-    .then(function (response) {
-      
-      setOpen(true);
-      setMessage("Login Success!!");
-      localStorage.setItem("token",  response.data.accessToken);
-    })
-    .catch(function (e) {
-      setOpen(true);         
-      setMessage(e.response.data.message);
-    });
+    const result = await login({ email: email, password: password });
+    if (result.flag === true) {
+
+      loginToken(result.token)
+      navigate('/', { replace: true });
+    }
+    setOpen(true)
+    setIsSuccess(result.flag);
+    setMessage(result.message);
+    setLoading(false);
   }
 
   return (
     <div>
       <form action={HandleLogin}>
         <div className='header'>
-          <h5>User Login</h5>
+        <Typography variant="h5" component="h5">
+          User Login
+        </Typography>
           <Link to="/signup">Go to register</Link>
         </div>
-        <Input type='text' title='Email' placeholder='fill your email' value={email} onChange={(e) => {setEmail(e.target.value)}} required></Input>
-        <Input type='password' title='Password' placeholder='fill your password' value={password} onChange={(e) => {setPassword(e.target.value)}} required />
-        <input type="submit" value="Login"/>
+        <TextField type='email' title='Email' placeholder='fill your email' value={email} onChange={(e) => { setEmail(e.target.value) }} required />
+        <TextField type='password' title='Password' placeholder='fill your password' value={password} onChange={(e) => { setPassword(e.target.value) }} required />
+        <Button
+          size="small"
+          type="submit"
+          loading={loading}
+          loadingPosition="end"
+          variant="contained"
+        >
+          Login
+        </Button>
       </form>
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={open}
         autoHideDuration={2000}
         onClose={handleClose}
-        message={message}
-        action={action}
-      />
+      >
+        {
+          isSuccess ?
+            <Alert
+              onClose={handleClose}
+              severity="success"
+              variant="filled"
+              sx={{ width: '100%' }}
+            >
+              Login Success !!
+            </Alert> :
+            <Alert
+              onClose={handleClose}
+              severity="error"
+              variant="filled"
+              sx={{ width: '100%' }}
+            >
+              {message}
+            </Alert>
+        }
+      </Snackbar>
     </div>
   );
 }
-

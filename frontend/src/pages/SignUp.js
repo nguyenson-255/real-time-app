@@ -1,18 +1,33 @@
-import React, { useState }  from 'react';
+import React, { useEffect, useState } from 'react';
 import '../css/SignUp.css'
-import {Link} from "react-router-dom";
-import { Input } from '../../node_modules/@mui/material/index';
-import api from '../api/api'
+import { Link, useNavigate } from "react-router-dom";
+import { Alert, Button, Snackbar, TextField, Typography } from '../../node_modules/@mui/material/index';
+import { register } from '../services/authService';
 
 export default function SignUp() {
 
-  const [field,setField] = useState({
+  let navigate = useNavigate();
+
+  const [field, setField] = useState({
     email: '',
     username: '',
     password: '',
     passwordConfirm: '',
   });
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
 
+  useEffect(() => {
+    if (isSuccess) {
+      navigate('/login', { replace: true });
+    }
+  }, [isSuccess]);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -20,48 +35,69 @@ export default function SignUp() {
 
     setField({
       ...field,
-      [name] : value
+      [name]: value
     });
   }
 
-  const HandleSignUp = () => {
+  const HandleSignUp = async () => {
 
-    console.log(field.email, field.username);
-    
-    api.post('/api/users/', {
-      email: field.email,
-      password: field.password,
-      username: field.username
-    })
-    .then(function (response) {
-      alert('Register Success');
-      console.log(response.data);
-    })
-    .catch(function (error) {
-      console.log(error);
-      
-      alert(error);
-    });
+    const result = await register({ email: field.email, password: field.password, username: field.username });
+    setOpen(true)
+    setIsSuccess(result.flag);
+    setMessage(result.message);
+    setLoading(false);
   }
 
   return (
     <div>
       <form action={HandleSignUp}>
         <div className='header'>
-          <h5>Register</h5>
-          <Link to="/login">Go to login</Link>          
+          <Typography variant="h5" component="h5">
+            User SignUp
+          </Typography>
+          <Link to="/login">Go to login</Link>
         </div>
-        <label htmlFor='email'>Email: </label>
-        <Input id='email' name='email' type='email' title='Email' placeholder='fill your email' onChange={handleChange} required></Input>
-        <label htmlFor='email'>Username: </label>
-        <Input id='username' name='username' type='text' title='Email' placeholder='fill your username' onChange={handleChange} required></Input>
-        <label htmlFor='email'>Password: </label>
-        <Input id='password' name='password' type='password' title='Password' placeholder='fill your password' onChange={handleChange} required></Input>
-        <label htmlFor='email'>Password Confirm: </label>
-        <Input id='passwordConfirm' name='passwordConfirm' type='password' title='PasswordConfirm' placeholder='fill your password confirm' onChange={handleChange} required></Input>
-        <input type="submit" value="Sign Up"/>
+        <TextField name='email' type='email' title='Email' placeholder='fill your email' onChange={handleChange} required />
+        <TextField name='username' type='text' title='Username' placeholder='fill your username' onChange={handleChange} required />
+        <TextField name='password' type='password' title='Password' placeholder='fill your password' onChange={handleChange} required />
+        <TextField name='passwordConfirm' type='password' title='Password Confirm' placeholder='fill your password confirrm' onChange={handleChange} required />
+        <Button
+          size="small"
+          type="submit"
+          loading={loading}
+          loadingPosition="end"
+          variant="contained"
+        >
+          Register
+        </Button>
       </form>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={open}
+        autoHideDuration={2000}
+        onClose={handleClose}
+      >
+        {
+          isSuccess ?
+            <Alert
+              onClose={handleClose}
+              severity="success"
+              variant="filled"
+              sx={{ width: '100%' }}
+            >
+              {message}
+            </Alert> :
+            <Alert
+              onClose={handleClose}
+              severity="error"
+              variant="filled"
+              sx={{ width: '100%' }}
+            >
+              {message}
+            </Alert>
+        }
+      </Snackbar>
     </div>
-  )
+  );
 }
 
