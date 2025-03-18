@@ -31,21 +31,21 @@ export default function Login() {
   );
 
   const HandleLogin = () => {
+    
     api.post('/api/users/login', {
       email: email,
       password: password
     })
     .then(function (response) {
-      console.log(response);
       
       setOpen(true);
       setMessage("Login Success!!");
       localStorage.setItem("token",  response.data.accessToken);
     })
-    // .catch(function (e) {
-    //   setOpen(true);      
-    //   setMessage(e[0]);
-    // });
+    .catch(function (e) {
+      setOpen(true);         
+      setMessage(e.response.data.message);
+    });
   }
 
   return (

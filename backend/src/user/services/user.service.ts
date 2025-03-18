@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
@@ -25,6 +25,8 @@ export class UserService {
       const hashPassword = await this.authService.hashPassword(userEntity.password ?? '');
       userEntity.password = hashPassword;
 
+      console.log(userEntity);
+      
       return await this.userRepository.save(this.userRepository.create(userEntity));
     } else {
       throw new HttpException('Email and Username Exist', HttpStatus.CONFLICT);
@@ -39,11 +41,12 @@ export class UserService {
 
       if (await this.authService.comparePassword(userEntity.password, foundUser.password)) {
 
-        return await this.authService.generateToken(foundUser);
+        const newUser = await this.findOneById(foundUser.id);
+        return await this.authService.generateToken(newUser);
       }
     }
     
-    throw new UnauthorizedException();
+    throw new BadRequestException('Email or Password Wrong !!');
   }
 
   private async findByEmail(email: string | undefined): Promise<UserI | null> {
@@ -76,5 +79,13 @@ export class UserService {
     console.log(user);
 
     return !!user;
+  }
+
+  private async findOneById(id: string | undefined): Promise<UserI> {
+    const user = await this.userRepository.findOne( {where: {id}});
+    return {
+      username: user?.username,
+      email: user?.email
+    }
   }
 }
