@@ -13,6 +13,10 @@ export class UserService {
     private readonly authService: AuthService
   ) {}
 
+  async test(jwt) {
+    return this.authService.vertifyJwt(jwt);
+  }
+
   async create(userEntity: UserI): Promise<UserI> {
 
     const checkMail: boolean = await this.emailExist(userEntity.email);
@@ -81,9 +85,10 @@ export class UserService {
     return !!user;
   }
 
-  private async findOneById(id: string | undefined): Promise<UserI> {
+  async findOneById(id: string | undefined): Promise<UserI> {
     const user = await this.userRepository.findOne( {where: {id}});
     return {
+      id: user?.id,
       username: user?.username,
       email: user?.email
     }

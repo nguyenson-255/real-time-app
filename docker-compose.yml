@@ -30,7 +30,7 @@ services:
       - /son/src/app/node_modules/
     ports:
       - "3001:3001"
-    # command: ["npm", "run", "start:dev"]
+    command: ["npm", "run", "start:dev"]
   postgres_app:
     image: postgres:15
     restart: always

@@ -3,10 +3,12 @@ import '../css/SignUp.css'
 import { Link, useNavigate } from "react-router-dom";
 import { Alert, Button, Snackbar, TextField, Typography } from '../../node_modules/@mui/material/index';
 import { register } from '../services/authService';
+import { useAuth } from '../uttil/AuthContext';
 
 export default function SignUp() {
 
   let navigate = useNavigate();
+  const { token, loginToken } = useAuth();
 
   const [field, setField] = useState({
     email: '',
@@ -18,6 +20,12 @@ export default function SignUp() {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
+
+    useEffect(() => {
+      if (token) {
+        navigate('/', { replace: true });
+      }
+    }, [token, loginToken]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -39,7 +47,14 @@ export default function SignUp() {
     });
   }
 
-  const HandleSignUp = async () => {
+  const HandleSignUp = async (e) => {
+    e.preventDefault();
+    if (field.password !== field.passwordConfirm) {
+      setOpen(true)
+      setIsSuccess(false);
+      setMessage('Password not matching');
+      return;
+    }
 
     const result = await register({ email: field.email, password: field.password, username: field.username });
     setOpen(true)
@@ -50,7 +65,7 @@ export default function SignUp() {
 
   return (
     <div>
-      <form action={HandleSignUp}>
+      <form onSubmit={HandleSignUp}>
         <div className='header'>
           <Typography variant="h5" component="h5">
             User SignUp
@@ -60,7 +75,7 @@ export default function SignUp() {
         <TextField name='email' type='email' title='Email' placeholder='fill your email' onChange={handleChange} required />
         <TextField name='username' type='text' title='Username' placeholder='fill your username' onChange={handleChange} required />
         <TextField name='password' type='password' title='Password' placeholder='fill your password' onChange={handleChange} required />
-        <TextField name='passwordConfirm' type='password' title='Password Confirm' placeholder='fill your password confirrm' onChange={handleChange} required />
+        <TextField name='passwordConfirm' type='password' title='Password Confirm' placeholder='fill your password confirrm' onChange={handleChange} required/>
         <Button
           size="small"
           type="submit"

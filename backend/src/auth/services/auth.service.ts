@@ -19,7 +19,10 @@ export class AuthService {
         return bcrypt.compareSync(password,hashPassword);
     }
 
-    async vertifyJwt(jwt: string): Promise<any> {
+    async vertifyJwt(jwt: string | undefined): Promise<any> {
+        if (jwt === undefined) {
+            return null;
+        }
         return this.jwtService.verifyAsync(jwt);
     }
  }
