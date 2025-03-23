@@ -35,6 +35,7 @@ export default function Login() {
 
       loginToken(result.token)
       navigate('/', { replace: true });
+      
     }
     setOpen(true)
     setIsSuccess(result.flag);

@@ -1,0 +1,7 @@
+#root {
+    margin: 5rem;
+}
+
+.done {
+    text-decoration: line-through;
+}

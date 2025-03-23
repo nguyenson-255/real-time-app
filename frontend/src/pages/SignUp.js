@@ -21,11 +21,11 @@ export default function SignUp() {
   const [message, setMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
 
-    useEffect(() => {
-      if (token) {
-        navigate('/', { replace: true });
-      }
-    }, [token, loginToken]);
+  useEffect(() => {
+    if (token) {
+      navigate('/', { replace: true });
+    }
+  }, [token, loginToken]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -75,7 +75,7 @@ export default function SignUp() {
         <TextField name='email' type='email' title='Email' placeholder='fill your email' onChange={handleChange} required />
         <TextField name='username' type='text' title='Username' placeholder='fill your username' onChange={handleChange} required />
         <TextField name='password' type='password' title='Password' placeholder='fill your password' onChange={handleChange} required />
-        <TextField name='passwordConfirm' type='password' title='Password Confirm' placeholder='fill your password confirrm' onChange={handleChange} required/>
+        <TextField name='passwordConfirm' type='password' title='Password Confirm' placeholder='fill your password confirrm' onChange={handleChange} required />
         <Button
           size="small"
           type="submit"
