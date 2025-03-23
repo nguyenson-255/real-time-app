@@ -13,17 +13,15 @@ export class TodoGateway implements OnGatewayConnection{
   ) {}
 
   async handleConnection(socket: Socket) {
-
-    try {
-      const decodeToken = await this.authService.vertifyJwt(socket.handshake.headers.authorization);
+    try {            
+      const decodeToken = await this.authService.vertifyJwt(socket.handshake.auth.authorization);
 
       const user: UserI = await this.userService.findOneById(decodeToken.id);
-
-      if (!user) {
+      
+      if (!user) {        
         return this.disconnect(socket);
       } else {
-        console.log('do smt', user);
-        
+        console.log('do smt', user); 
       }
     } catch (error) {
       return this.disconnect(socket);
@@ -39,7 +37,8 @@ export class TodoGateway implements OnGatewayConnection{
   }
 
   @SubscribeMessage('message')
-  handleMessage(client: any, payload: any): string {
-    return 'Hello world!';
+  handleMessage(client: any, payload: any) {
+    console.log(`receiver: ${payload}`);
+    client.emit('data');
   }
 }

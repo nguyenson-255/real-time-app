@@ -12,8 +12,8 @@ import { AuthMiddleware } from './auth/auth.middleware';
     TypeOrmModule.forRootAsync({
       useFactory: () => ({
         type: 'postgres',
-        // host: 'postgres_app',
-        host: 'localhost',
+        host: 'postgres_app',
+        // host: 'localhost',
         port: 5432,
         username: 'postgres',
         password: process.env.DATABASE_PASSWORD ?? 'ns',
