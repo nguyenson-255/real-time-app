@@ -32,9 +32,9 @@ export default function Login() {
 
     const result = await login({ email: email, password: password });
     if (result.flag === true) {
-
+      
       loginToken(result.token)
-      navigate('/', { replace: true });
+      // navigate('/', { replace: true });
       
     }
     setOpen(true)

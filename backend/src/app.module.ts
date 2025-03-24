@@ -5,6 +5,9 @@ import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthMiddleware } from './auth/auth.middleware';
+import { Connection } from './todo/entities/connection.entity';
+import { Task } from './todo/entities/task.entity';
+import { User } from './user/entities/user.entity';
 
 @Module({
   imports: [
@@ -20,6 +23,7 @@ import { AuthMiddleware } from './auth/auth.middleware';
         database: 'postgres',
         autoLoadEntities: true,
         synchronize: true,
+        logging: true
       }),
     }),
     TodoModule, 

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Box, Button, Card, CardActionArea, CardContent, Checkbox, Divider, Grid, List, ListItemButton, ListItemIcon, ListItemText, Paper, Typography } from '../../node_modules/@mui/material/index';
-import { BorderColor } from '../../node_modules/@mui/icons-material/index';
+import { Button, Card, CardActionArea, CardContent, Checkbox, Divider, Grid, List, Paper, Typography } from '../../node_modules/@mui/material/index';
 
 function not(a, b) {
     return a.filter((value) => !b.includes(value));
@@ -20,10 +19,10 @@ export default function TransferList(todos) {
 
     React.useEffect(() => {
         setTodoitems(Object.values(todos)[0])
-    }, [])
+    }, [todos])
 
     React.useEffect(() => {
-        setLeft(todoitems.filter((value) => value.status === 'Pending'));
+        setLeft(todoitems.filter((value) => value.status === 'Not Started'));
         setMiddle(todoitems.filter((value) => value.status === 'In Progress'));
         setRight(todoitems.filter((value) => value.status === 'Completed'));
     }, [todoitems])
@@ -73,13 +72,12 @@ export default function TransferList(todos) {
         setChecked(not(checked['r'], rightChecked));
     };
 
-    const customList = (listIndex, items) => (
+    const customList = (listIndex, items, title) => (
         <Paper sx={{ width: 300, height: 630, overflow: 'auto' }}>
+            <Typography variant='h5' sx={{backgroundColor: 'gray', textAlign: 'center', fontSize: '2.5rem'}} >{title}</Typography>
             <List dense component="div" role="list">
                 {items.map((value) => {
-                    const labelId = `transfer-list-item-${value}-label`;
-                    console.log(value);
-                    
+                    const labelId = `transfer-list-item-${value}-label`;                    
                     return (
                         <Card>
                             <CardActionArea
@@ -107,7 +105,7 @@ export default function TransferList(todos) {
                                     />
                                 </Grid>
                             </CardActionArea>
-                            <Divider sx={{borderWidth: '0.1rem', borderColor: value.priority === 'High' ? 'red' : value.priority  === 'Low' ? 'gray' : 'green'}} />
+                            <Divider sx={{borderWidth: '0.1rem', borderColor: value.priority === 'high' ? 'red' : value.priority  === 'low' ? 'gray' : 'green'}} />
                         </Card>
                     );
                 })}
@@ -121,7 +119,7 @@ export default function TransferList(todos) {
             spacing={2}
             sx={{ justifyContent: 'center', alignItems: 'center' }}
         >
-            <Grid item>{customList('l', left)}</Grid>
+            <Grid item>{customList('l', left, 'BackLog')}</Grid>
             <Grid item>
                 <Grid container direction="column" sx={{ alignItems: 'center' }}>
                     <Button
@@ -146,7 +144,7 @@ export default function TransferList(todos) {
                     </Button>
                 </Grid>
             </Grid>
-            <Grid item>{customList('m', middle)}</Grid>
+            <Grid item>{customList('m', middle, 'To Do')}</Grid>
             <Grid item>
                 <Grid container direction="column" sx={{ alignItems: 'center' }}>
                     <Button
@@ -171,7 +169,7 @@ export default function TransferList(todos) {
                     </Button>
                 </Grid>
             </Grid>
-            <Grid item>{customList('r', right)}</Grid>
+            <Grid item>{customList('r', right, 'Done')}</Grid>
         </Grid>
     );
 }
