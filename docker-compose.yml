@@ -11,7 +11,7 @@ services:
       - api
       - postgres_app
     ports:
-      - "3000:3000"
+      - "3000:80"
     volumes:
       - ./frontend:/son/src/FE-app
       - /son/src/FE-app/node_modules/
@@ -31,7 +31,7 @@ services:
       - /son/src/app/node_modules/
     ports:
       - "3001:3001"
-    command: ["npm", "run", "start:dev"]
+    # command: ["npm", "run", "start:dev"]
   postgres_app:
     image: postgres:15
     restart: always

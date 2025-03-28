@@ -1,5 +1,8 @@
 import * as React from 'react';
 import { Button, Card, CardActionArea, CardContent, Checkbox, Divider, Grid, List, Paper, Typography } from '../../node_modules/@mui/material/index';
+import { updatedTask, updateTask } from '../services/todoService';
+import FormDialog from './FormDialog';
+import FormDialogEdit from './FormDialogEdit';
 
 function not(a, b) {
     return a.filter((value) => !b.includes(value));
@@ -9,7 +12,10 @@ function intersection(a, b) {
     return a.filter((value) => b.includes(value));
 }
 
-export default function TransferList(todos) {
+export default function TransferList(props) {
+    console.log("Received socket in TransferList:", props.socket);
+
+    // const { current: socket } = socketRef;
 
     const [checked, setChecked] = React.useState({ l: [], m: [], r: [] });
     const [left, setLeft] = React.useState([]);
@@ -17,9 +23,13 @@ export default function TransferList(todos) {
     const [right, setRight] = React.useState([]);
     const [todoitems, setTodoitems] = React.useState([]);
 
+
     React.useEffect(() => {
-        setTodoitems(Object.values(todos)[0])
-    }, [todos])
+        console.log(Object.values(props.todos)[0], props.socket);
+
+        setTodoitems(props.todos);
+    }, [props.todos])
+
 
     React.useEffect(() => {
         setLeft(todoitems.filter((value) => value.status === 'Not Started'));
@@ -42,7 +52,6 @@ export default function TransferList(todos) {
             } else {
                 newChecked.splice(currentIndex, 1); // Remove item if already checked
             }
-
             return { ...prevChecked, [listIndex]: newChecked }; // Update only the affected list
         });
     };
@@ -52,61 +61,86 @@ export default function TransferList(todos) {
         setLeft(left.concat(middleChecked));
         setMiddle(not(middle, middleChecked));
         setChecked(not(checked['m'], middleChecked));
+
+        middleChecked.map((value) => {
+            value.status = 'Not Started';
+            updateTask(props.socket, value);
+        });
     };
 
     const handleCheckedLeftMiddel = () => {
         setMiddle(middle.concat(leftChecked));
         setLeft(not(left, leftChecked));
         setChecked(not(checked['l'], leftChecked));
+
+        leftChecked.map((value) => {
+            value.status = 'In Progress';
+            updateTask(props.socket, value);
+        });
     };
 
     const handleCheckedMiddelRight = () => {
         setRight(right.concat(middleChecked));
         setMiddle(not(middle, middleChecked));
         setChecked(not(checked['m'], middleChecked));
+
+        middleChecked.map((value) => {
+            value.status = 'Completed';
+            updateTask(props.socket, value);
+        });
     };
 
     const handleCheckedRightMiddel = () => {
         setMiddle(middle.concat(rightChecked));
         setRight(not(right, rightChecked));
         setChecked(not(checked['r'], rightChecked));
+
+        rightChecked.map((value) => {
+            value.status = 'In Progress';
+            updateTask(props.socket, value);
+        });
+
     };
 
     const customList = (listIndex, items, title) => (
         <Paper sx={{ width: 300, height: 630, overflow: 'auto' }}>
-            <Typography variant='h5' sx={{backgroundColor: 'gray', textAlign: 'center', fontSize: '2.5rem'}} >{title}</Typography>
+            <Typography variant='h5' sx={{ backgroundColor: 'gray', textAlign: 'center', fontSize: '2.5rem' }} >{title}</Typography>
             <List dense component="div" role="list">
                 {items.map((value) => {
-                    const labelId = `transfer-list-item-${value}-label`;                    
+                    const labelId = `transfer-list-item-${value}-label`;
                     return (
-                        <Card>
-                            <CardActionArea
-                                key={value.id}
-                                role="listitem"
-                                onClick={handleToggle(listIndex, value)}
-                            >
-                                <Grid container direction="row" sx={{ justifyContent: 'space-between' }}>
-                                    <CardContent sx={{ height: '100%'}}>
-                                        <Typography variant="h5" component="div" className={(value.status === 'Completed') ? 'done' : ''} >
-                                            {value.title}
-                                        </Typography>
-                                        <Typography variant="body2" color="text.secondary">
-                                            {value.description}
-                                        </Typography>
-                                        
-                                    </CardContent>
-                                    <Checkbox
-                                        checked={(checked[listIndex] || []).includes(value)}
-                                        tabIndex={-1}
-                                        disableRipple
-                                        inputProps={{
-                                            'aria-labelledby': labelId,
-                                        }}
-                                    />
-                                </Grid>
-                            </CardActionArea>
-                            <Divider sx={{borderWidth: '0.1rem', borderColor: value.priority === 'high' ? 'red' : value.priority  === 'low' ? 'gray' : 'green'}} />
-                        </Card>
+
+                        <React.Fragment>
+                            <FormDialogEdit task={value} socket={props.socket} ></FormDialogEdit>
+                            <Card>
+                                <CardActionArea
+                                    key={value.id}
+                                    role="listitem"
+                                    onClick={handleToggle(listIndex, value)}
+                                >
+                                    <Grid container direction="row" sx={{ justifyContent: 'space-between' }}>
+                                        <CardContent sx={{ height: '100%' }}>
+                                            <Typography variant="h5" component="div" className={(value.status === 'Completed') ? 'done' : ''} >
+                                                {value.title}
+                                            </Typography>
+                                            <Typography variant="body2" color="text.secondary">
+                                                {value.description}
+                                            </Typography>
+
+                                        </CardContent>
+                                        <Checkbox
+                                            checked={(checked[listIndex] || []).includes(value)}
+                                            tabIndex={-1}
+                                            disableRipple
+                                            inputProps={{
+                                                'aria-labelledby': labelId,
+                                            }}
+                                        />
+                                    </Grid>
+                                </CardActionArea>
+                                <Divider sx={{ borderWidth: '0.1rem', borderColor: value.priority === 'high' ? 'red' : value.priority === 'low' ? 'gray' : 'green' }} />
+                            </Card>
+                        </React.Fragment>
                     );
                 })}
             </List>

@@ -12,8 +12,10 @@ import MenuItem from '@mui/material/MenuItem';
 import { addTask } from '../services/todoService';
 import { getSocket } from '../socket/socket';
 import { useAuth } from '../uttil/AuthContext';
+import EditSharpIcon from '@mui/icons-material/EditSharp';
+import { IconButton } from '../../node_modules/@mui/material/index';
 
-export default function FormDialog(socket) {    
+export default function FormDialogEdit({socket, task}) {    
 
     const [open, setOpen] = React.useState(false);
 
@@ -38,9 +40,9 @@ export default function FormDialog(socket) {
 
     return (
         <React.Fragment>
-            <Button variant="outlined" onClick={handleClickOpen}>
-                Create New Task
-            </Button>
+            <IconButton aria-label="delete" onClick={handleClickOpen}>
+                <EditSharpIcon />
+            </IconButton>
             <Dialog
                 open={open}
                 onClose={handleClose}

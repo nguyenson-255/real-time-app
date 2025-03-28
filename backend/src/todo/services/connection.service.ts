@@ -28,5 +28,9 @@ export class ConnectionService {
     async deleteSocketAll() {
         await this.connectionReponsitory.createQueryBuilder().delete().execute();
     }
+
+    async findAll(): Promise<ConnectionI[]> {
+        return await this.connectionReponsitory.find();
+    }
 }
 

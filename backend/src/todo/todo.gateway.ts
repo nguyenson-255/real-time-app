@@ -6,6 +6,8 @@ import { UserI } from 'src/user/interfaces/user.interfaces';
 import { UserService } from 'src/user/services/user.service';
 import { ConnectionService } from './services/connection.service';
 import { TaskService } from './services/task.service';
+import { CreateTaskDto } from './dto/create-task.dto';
+import { UpdateTaskDto } from './dto/update-task.dto';
 
 @WebSocketGateway({namespace: 'todos'})
 export class TodoGateway implements OnGatewayConnection, OnGatewayDisconnect{
@@ -56,4 +58,32 @@ export class TodoGateway implements OnGatewayConnection, OnGatewayDisconnect{
     console.log(`receiver: ${payload}`);
     client.emit('data');
   }
+
+  @SubscribeMessage('addTask')
+  async addTask(socket: Socket, payload: CreateTaskDto) {
+
+    const task = await this.taskService.create(payload);    
+
+    const connections = await this.connectService.findAll();
+
+    for (const connection of connections) {
+      if (connection.socketId) {
+        this.server.to(connection.socketId).emit('addedTask', task);
+      }
+    }
+  }
+
+  @SubscribeMessage('updateTask')
+  async updateTask(socket: Socket, payload: UpdateTaskDto) {
+    const task = await this.taskService.update(payload.id, payload);
+
+    const connections = await this.connectService.findAll();
+
+    for (const connection of connections) {
+      if (connection.socketId) {
+        this.server.to(connection.socketId).emit('updatedTask', task);
+      }
+    }
+  }
+
 }
