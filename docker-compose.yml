@@ -26,6 +26,7 @@ services:
       - PORT=3001
       - DATABASE_PASSWORD=ns
       - BASE_URL=api
+      - DATABASE_HOST=postgres_app
     volumes:
       - ./backend:/son/src/app
       - /son/src/app/node_modules/

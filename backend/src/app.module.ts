@@ -15,8 +15,7 @@ import { User } from './user/entities/user.entity';
     TypeOrmModule.forRootAsync({
       useFactory: () => ({
         type: 'postgres',
-        host: 'postgres_app',
-        // host: 'localhost',
+        host:  process.env.DATABASE_HOST ?? 'localhost',
         port: 5432,
         username: 'postgres',
         password: process.env.DATABASE_PASSWORD ?? 'ns',
