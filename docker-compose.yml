@@ -17,7 +17,7 @@ services:
       - /son/src/FE-app/node_modules/
   api:
     build:
-      context: ./backend
+      context: ./todo-api
       dockerfile: Dockerfile
     restart: always
     depends_on:
@@ -28,7 +28,7 @@ services:
       - BASE_URL=api
       - DATABASE_HOST=postgres_app
     volumes:
-      - ./backend:/son/src/app
+      - ./todo-api:/son/src/app
       - /son/src/app/node_modules/
     ports:
       - "3001:3001"
@@ -42,7 +42,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - db_data:/var/lib/postgresql/data  # Correct usage of named volume
+      - db_data:/var/lib/postgresql/data
 
 volumes:
-  db_data:  # Define named volume correctly
+  db_data:
