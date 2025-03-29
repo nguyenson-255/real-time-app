@@ -1,0 +1,18 @@
+#root {
+    margin: 5rem;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+}
+
+.action {
+    padding-inline: 1rem;
+    padding-block-start: 1rem;
+    padding-block-end: 8rem;
+}
+
+.done {
+    text-decoration: line-through;
+}

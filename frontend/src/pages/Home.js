@@ -1,28 +1,58 @@
-import {React, useEffect, useState}  from 'react';
-import api from '../api/api'
-export default function Home() {
-  const [data, setData] = useState('');
-  const [loading, setLoading] = useState(true);
+import Typography from '@mui/material/Typography';
+import { useEffect, useState } from 'react';
+import TransferList from '../components/TransferList';
+import '../css/Home.css';
+import { addedTask, getTasks, updatedTask } from '../services/todoService';
+import { connectSocket, disconnectSocket } from '../socket/socket';
+import { useAuth } from '../uttil/AuthContext';
+import FormDialog from '../components/FormDialog';
 
-  useEffect(()=>{
-    api
-      .get("/api/users/1") // Fetch data from the API
-      .then((response) => {
-        setData(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching posts:", error);
-        setLoading(false);
-      });
-  },[])
+export default function Home() {
+  const [data, setData] = useState([]);
+  const { token } = useAuth();
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    if (!token) return;
+
+    const socketInstance = connectSocket("todos", token);
+    setSocket(socketInstance);
+
+    return () => {
+      if (socketInstance) {
+        disconnectSocket();
+      }
+    };
+  }, [token]);
+
+  useEffect(() => {
+    if (!socket) return;
+    getTasks(socket, (tasks) => {
+      setData(tasks);
+    });
+
+    addedTask(socket, (task) => {
+      setData((prevData) => [...prevData, task]);
+    });
+
+    updatedTask(socket, (task) => {
+      setData((prevData) => prevData.map(t => t.id === task.id ? task : t));
+    });
+
+  }, [socket]);
 
   return (
-    <div>
-      <h1>Welcome to Home Page   aaa</h1>
-      <p>This is a React class component.</p>
-      <p>{data}</p>
+    <div className='main'>
+
+      <div className='action'>
+        <Typography variant="h5" component="div">
+          Action
+        </Typography>
+        <FormDialog socket={socket} />
+      </div>
+
+      {socket ? <TransferList todos={data} socket={socket} /> : <p>Loading socket...</p>}
+      
     </div>
   );
 }
-
