@@ -15,6 +15,7 @@ services:
     volumes:
       - ./frontend:/son/src/FE-app
       - /son/src/FE-app/node_modules/
+
   api:
     build:
       context: ./todo-api
@@ -27,6 +28,8 @@ services:
       - DATABASE_PASSWORD=ns
       - BASE_URL=api
       - DATABASE_HOST=postgres_app
+    # secrets:
+    #   - DATABASE_PASSWORD      
     volumes:
       - ./todo-api:/son/src/app
       - /son/src/app/node_modules/
@@ -46,3 +49,6 @@ services:
 
 volumes:
   db_data:
+# secrets:
+#   DATABASE_PASSWORD:
+#     file: ./todo-api/.env
