@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: be-depl
+  name: todo-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: be
+      app: todo
   template:
     metadata:
       labels:
-        app: be
+        app: todo
     spec:
       containers:
-      - name: be
+      - name: todo
         image: nguyenson255/todosocket-be
         ports:
         - containerPort: 3001
@@ -31,10 +31,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: be-service
+  name: todo-service
 spec:
   selector:
-    app: be
+    app: todo
   ports:
   - protocol: TCP
     port: 3001
