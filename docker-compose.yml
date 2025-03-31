@@ -6,17 +6,27 @@ services:
       dockerfile: Dockerfile
     restart: always
     environment:
-      - BASE_URL=api
+      - BASE_URL=todo-api
     depends_on:
-      - api
-      - postgres_app
+      - todo-api
+      - chat-api
     ports:
       - "3000:80"
     volumes:
       - ./frontend:/son/src/FE-app
       - /son/src/FE-app/node_modules/
 
-  api:
+  chat-api:
+    build:
+      context: ./chat-api
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - mongo
+    ports:
+      - "3002:8080"
+  
+  todo-api:
     build:
       context: ./todo-api
       dockerfile: Dockerfile
@@ -26,7 +36,7 @@ services:
     environment:
       - PORT=3001
       - DATABASE_PASSWORD=ns
-      - BASE_URL=api
+      - BASE_URL=todo-api
       - DATABASE_HOST=postgres_app
     # secrets:
     #   - DATABASE_PASSWORD      
@@ -47,8 +57,34 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
 
+  mongo:
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=user
+      - MONGO_INITDB_ROOT_PASSWORD=ns
+      - MONGO_INITDB_DATABASE=chat
+  
+  mongo_express:
+    image: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=user
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=ns
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=ns
+    depends_on:
+      - mongo
 volumes:
   db_data:
+  mongo_data:
 # secrets:
 #   DATABASE_PASSWORD:
 #     file: ./todo-api/.env
