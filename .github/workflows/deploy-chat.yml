@@ -47,7 +47,7 @@ jobs:
       uses: docker/build-push-action@v6
       with:
         push: true
-        tags: nguyenson255/todosocket-chat-api:(date +%Y%m%d%H%M%S)
+        tags: nguyenson255/todosocket-chat-api
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     # - name: Update dependency graph
