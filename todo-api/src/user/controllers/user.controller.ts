@@ -36,6 +36,6 @@ export class UserController {
   @UseGuards(new JwtAuthGuard())
   async getProfile(@Req() req) {
     console.log(await this.userService.test(req.headers['authorization'].split(' ')[1]));
-    return 'aa7kkk12'
+    return 'aa7k12'
   }
 }

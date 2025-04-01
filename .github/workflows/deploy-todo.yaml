@@ -21,9 +21,13 @@ jobs:
       with:
         node-version: '20'
         cache: 'npm'
+        cotext: todo-api/
     - run: npm ci
+      working-directory: todo-api
     - run: npm run build --if-present
+      working-directory: todo-api
     - run: npm run start
+      working-directory: todo-api
 
     -
       name: Login to Docker Hub
