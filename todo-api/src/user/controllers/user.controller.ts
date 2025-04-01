@@ -25,6 +25,7 @@ export class UserController {
     const loginEntites = this.dtoHelperService.loginDtoToEntites(loginDto);
     const jwt: string =  await this.userService.login(loginEntites);
 
+
     return {
       accessToken: jwt,
       tokenType: 'JWT',
@@ -36,6 +37,6 @@ export class UserController {
   @UseGuards(new JwtAuthGuard())
   async getProfile(@Req() req) {
     console.log(await this.userService.test(req.headers['authorization'].split(' ')[1]));
-    return 'aa8a77712'
+    return 'aasssk7ddk12'
   }
 }
