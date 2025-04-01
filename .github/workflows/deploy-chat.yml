@@ -6,11 +6,11 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Java CI with Maven
+name: Java CI with Maven and Docker
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "test" ]
     paths: 
     - 'chat-api/**'
 
@@ -46,6 +46,8 @@ jobs:
       name: Build and push
       uses: docker/build-push-action@v6
       with:
+        context: ./chat-api
+        file: ./chat-api/Dockerfile
         push: true
         tags: nguyenson255/todosocket-chat-api
 
