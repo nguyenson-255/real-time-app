@@ -1,15 +1,19 @@
 package com.son.chat_api.controller;
 
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import com.son.chat_api.dtos.SendMessageDto;
 import com.son.chat_api.entities.Message;
 import com.son.chat_api.services.ChatService;
 
 @Controller
 // @RequestMapping("/api/v1/chat")
+@CrossOrigin("http://localhost:80")
 public class ChatController {
 
     private ChatService chatService;
@@ -20,7 +24,10 @@ public class ChatController {
 
     @MessageMapping("/sendMessage/{roomId}")
     @SendTo("/topic/room/{roomId}")
-    public Message sendMessage(@PathVariable String roomId) {
-       return this.chatService.sendMessage();
+    public Message sendMessage(
+        @RequestBody SendMessageDto messageDto,
+        @DestinationVariable String roomId
+    ) {
+       return this.chatService.sendMessage(messageDto, roomId);
     }
 }

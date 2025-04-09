@@ -1,7 +1,6 @@
 package com.son.chat_api.reponsitories;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Component;
 
 import com.son.chat_api.entities.Room;
 
