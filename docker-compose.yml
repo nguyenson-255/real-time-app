@@ -1,20 +1,20 @@
 name: 'ToDo App RealTime'
 services:
-  fe:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    restart: always
-    environment:
-      - BASE_URL=todo-api
-    depends_on:
-      - todo-api
-      - chat-api
-    ports:
-      - "3000:80"
-    volumes:
-      - ./frontend:/son/src/FE-app
-      - /son/src/FE-app/node_modules/
+  # fe:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   restart: always
+  #   environment:
+  #     - BASE_URL=todo-api
+  #   depends_on:
+  #     - todo-api
+  #     - chat-api
+  #   ports:
+  #     - "3000:80"
+  #   volumes:
+  #     - ./frontend:/son/src/FE-app
+  #     - /son/src/FE-app/node_modules/
 
   chat-api:
     build:
@@ -25,37 +25,38 @@ services:
       - mongo
     ports:
       - "3002:8080"
-  
-  todo-api:
-    build:
-      context: ./todo-api
-      dockerfile: Dockerfile
-    restart: always
-    depends_on:
-      - postgres_app
-    environment:
-      - PORT=3001
-      - DATABASE_PASSWORD=ns
-      - BASE_URL=todo-api
-      - DATABASE_HOST=postgres_app
-    # secrets:
-    #   - DATABASE_PASSWORD      
     volumes:
-      - ./todo-api:/son/src/app
-      - /son/src/app/node_modules/
-    ports:
-      - "3001:3001"
-    # command: ["npm", "run", "start:dev"]
-  postgres_app:
-    image: postgres:15
-    restart: always
-    environment:
-      - POSTGRES_PASSWORD=ns
-      - JWT_SERECT=changeme
-    ports:
-      - "5432:5432"
-    volumes:
-      - db_data:/var/lib/postgresql/data
+      - ./chat-api:/app
+  # todo-api:
+  #   build:
+  #     context: ./todo-api
+  #     dockerfile: Dockerfile
+  #   restart: always
+  #   depends_on:
+  #     - postgres_app
+  #   environment:
+  #     - PORT=3001
+  #     - DATABASE_PASSWORD=ns
+  #     - BASE_URL=todo-api
+  #     - DATABASE_HOST=postgres_app
+  #   # secrets:
+  #   #   - DATABASE_PASSWORD      
+  #   volumes:
+  #     - ./todo-api:/son/src/app
+  #     - /son/src/app/node_modules/
+  #   ports:
+  #     - "3001:3001"
+  #   # command: ["npm", "run", "start:dev"]
+  # postgres_app:
+  #   image: postgres:15
+  #   restart: always
+  #   environment:
+  #     - POSTGRES_PASSWORD=ns
+  #     - JWT_SERECT=changeme
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - db_data:/var/lib/postgresql/data
 
   mongo:
     image: mongo:latest
