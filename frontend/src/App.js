@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import { AuthProvider } from "./uttil/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import JoinChat from "./pages/JoinChat";
 
 function App() {
   return (
@@ -18,8 +19,8 @@ function App() {
           {/* Protected Route (Requires Auth) */}
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Home />} />
+            <Route path="/join" element={<JoinChat />} />
           </Route>
-
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </Router>

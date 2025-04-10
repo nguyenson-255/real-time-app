@@ -1,8 +1,8 @@
-import api from '../api/api'
+import todoApi from '../api/todo-api'
 
 export async function login({ email, password }) {
 
-    return await api.post('/api/users/login', {
+    return await todoApi.post('/api/users/login', {
         email: email,
         password: password
     }).then(function (response) {
@@ -21,7 +21,7 @@ export async function login({ email, password }) {
 
 
 export async function register({ email, password, username }) {
-    return await api.post('/api/users/', {
+    return await todoApi.post('/api/users/', {
         email: email,
         password: password,
         username: username

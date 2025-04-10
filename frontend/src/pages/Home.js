@@ -6,11 +6,14 @@ import { addedTask, getTasks, updatedTask } from '../services/todoService';
 import { connectSocket, disconnectSocket } from '../socket/socket';
 import { useAuth } from '../uttil/AuthContext';
 import FormDialog from '../components/FormDialog';
+import Button from '@mui/material/Button';
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [data, setData] = useState([]);
   const { token } = useAuth();
   const [socket, setSocket] = useState(null);
+  let navigate = useNavigate();
 
   useEffect(() => {
     if (!token) return;
@@ -41,14 +44,21 @@ export default function Home() {
 
   }, [socket]);
 
+  const handleJoinChat = () => {
+    // Logic to join chat
+    navigate('/join');
+  }
+
   return (
     <div className='main'>
 
       <div className='action'>
         <Typography variant="h5" component="div">
-          Action
+          Action111
         </Typography>
         <FormDialog socket={socket} />
+
+        <Button onClick={handleJoinChat}>Join Chat</Button>
       </div>
 
       {socket ? <TransferList todos={data} socket={socket} /> : <p>Loading socket...</p>}
