@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [data, setData] = useState([]);
-  const { token } = useAuth();
+  const { token, logoutToken } = useAuth();
   const [socket, setSocket] = useState(null);
   let navigate = useNavigate();
 
@@ -59,6 +59,14 @@ export default function Home() {
         <FormDialog socket={socket} />
 
         <Button onClick={handleJoinChat}>Join Chat</Button>
+        <Button onClick={() => {
+          navigate('/chat');
+        }}>Chat</Button>
+
+        <Button onClick={() => {
+          logoutToken()
+        }}>Logout</Button>
+
       </div>
 
       {socket ? <TransferList todos={data} socket={socket} /> : <p>Loading socket...</p>}
