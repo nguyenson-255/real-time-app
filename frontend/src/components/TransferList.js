@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button, Card, CardActionArea, CardContent, Checkbox, Divider, Grid, List, Paper, Typography } from '../../node_modules/@mui/material/index';
-import { updateTask } from '../services/todoService';
+import { updateTask } from '../services/todo.service';
 import FormDialogEdit from './FormDialogEdit';
 
 function not(a, b) {

@@ -13,7 +13,7 @@ import com.son.chat_api.services.ChatService;
 
 @Controller
 // @RequestMapping("/api/v1/chat")
-@CrossOrigin("http://localhost:80")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ChatController {
 
     private ChatService chatService;
@@ -23,7 +23,7 @@ public class ChatController {
     }
 
     @MessageMapping("/sendMessage/{roomId}")
-    @SendTo("/topic/room/{roomId}")
+    @SendTo("/topic/rooms/{roomId}")
     public Message sendMessage(
         @RequestBody SendMessageDto messageDto,
         @DestinationVariable String roomId

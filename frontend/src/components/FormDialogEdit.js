@@ -11,7 +11,7 @@ import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import * as React from 'react';
 import { IconButton } from '../../node_modules/@mui/material/index';
-import { addTask } from '../services/todoService';
+import { addTask } from '../services/todo.service';
 
 export default function FormDialogEdit({socket, task}) {    
 

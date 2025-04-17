@@ -17,7 +17,8 @@ import com.son.chat_api.services.RoomSerivce;
 
 @RestController
 @RequestMapping("/api/v1/rooms")
-@CrossOrigin("http://localhost:80")
+@CrossOrigin(origins = "http://localhost:3000")
+
 public class RoomController {
 
     private RoomSerivce roomSerivce;

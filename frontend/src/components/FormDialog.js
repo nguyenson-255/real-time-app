@@ -9,7 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import * as React from 'react';
-import { addTask } from '../services/todoService';
+import { addTask } from '../services/todo.service';
 
 export default function FormDialog(socket) {    
 

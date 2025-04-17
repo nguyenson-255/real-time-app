@@ -27,9 +27,6 @@ public class JwtConfig {
             extractAllClaims(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            System.out.println("Validating token: " + token);
-            System.out.println(secret.getBytes() + " " + secret);
-            System.out.println("Exception: " + e.getMessage());
             return false;
         }
     }

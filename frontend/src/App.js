@@ -1,17 +1,15 @@
+import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Chat from "./pages/Chat";
 import Home from "./pages/Home";
+import JoinChat from "./pages/JoinChat";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
-import { AuthProvider } from "./uttil/AuthContext";
-import ProtectedRoute from "./components/ProtectedRoute";
-import JoinChat from "./pages/JoinChat";
-import Chat from "./pages/Chat";
 
 function App() {
   return (
-    <AuthProvider>
+    // <AuthProvider>
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -26,7 +24,7 @@ function App() {
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </Router>
-    </AuthProvider>
+    // </AuthProvider>
   );
 }
 

@@ -12,18 +12,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/topic"); // nơi client subscribe
-        registry.setApplicationDestinationPrefixes("/app"); // nơi client gửi message
+        registry.enableSimpleBroker("/topic"); 
+        registry.setApplicationDestinationPrefixes("/app");
     }
+    
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/chat") // endpoint WebSocket
-                .setAllowedOrigins("http://localhost:80") // cho phép client từ localhost:3000
-                .withSockJS(); // hỗ trợ fallback cho client không hỗ trợ websocket
+                .setAllowedOrigins("http://localhost:3000")
+                .withSockJS();
     }
-
-    
-
-    
-    
 }

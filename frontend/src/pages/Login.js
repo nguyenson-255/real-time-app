@@ -1,14 +1,19 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from "react-router-dom";
 import { Button, TextField, Typography } from '../../node_modules/@mui/material/index';
 import '../css/Login.css';
-import { login } from '../services/authService';
-import { useAuth } from '../uttil/AuthContext';
+import { login } from '../services/auth.service';
+import { login as setToken } from '../slices/authSlice';
+
 
 export default function Login() {
 
-  const { token, loginToken } = useAuth();
+  // const { token, loginToken } = useAuth();
+
+  const token = useSelector((state) => state.auth.token); // Lấy token từ Redux store
+  const dispatch = useDispatch();
 
   let navigate = useNavigate();
 
@@ -20,7 +25,7 @@ export default function Login() {
     if (token) {
       navigate('/', { replace: true });
     }
-  }, [token, loginToken]);
+  }, [token, setToken]);
 
 
   const HandleLogin = async () => {
@@ -29,7 +34,8 @@ export default function Login() {
     if (result.flag === true) {
 
       toast.success(result.message)
-      loginToken(result.token)
+      dispatch(setToken(result.token));
+      // loginToken(result.token)
     } else {
       toast.error(result.message)
     }
