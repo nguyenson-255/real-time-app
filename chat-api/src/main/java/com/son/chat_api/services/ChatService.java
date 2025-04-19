@@ -20,7 +20,7 @@ public class ChatService {
         Room room = roomReponsitory.findByRoomId(roomId);
         
         if (room != null) {
-            Message message = new Message(messageDto.getSenderId(), messageDto.getContent());
+            Message message = new Message(messageDto.getSender(), messageDto.getContent());
             room.getMessages().add(message);
             roomReponsitory.save(room);
             return message;

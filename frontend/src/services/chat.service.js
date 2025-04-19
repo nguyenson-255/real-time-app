@@ -1,7 +1,15 @@
 import { stompClient } from "../socket/chat.socket";
 
+export const subscribeToRoomId = (roomId, callback) => {  
+  if (stompClient.connected) {
+    stompClient.subscribe(`/topic/rooms/${roomId}`, (message) => {
+        const msg = JSON.parse(message.body);
+        callback(msg);
+    });
+  }
+}
+
 export const sendMessage = (msg) => {
-  console.log(stompClient.connected);
   
   if (stompClient.connected) {
     stompClient.publish({

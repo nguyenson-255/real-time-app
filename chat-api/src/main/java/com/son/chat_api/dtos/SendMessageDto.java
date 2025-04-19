@@ -13,7 +13,7 @@ public class SendMessageDto {
 
     private String roomId;
 
-    private String senderId;
+    private String sender;
 
     private String content;
     

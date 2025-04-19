@@ -70,7 +70,7 @@ export default function Home() {
 
         <Button onClick={() => {
           dispatch(logout())
-          // logoutToken()
+          navigate('/login');
         }}>Logout</Button>
 
       </div>

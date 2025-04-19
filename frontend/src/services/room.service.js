@@ -32,3 +32,20 @@ export async function joinRoomApi({ roomId }) {
         };
     });
 }
+
+export async function getAllMessagesApi({ roomId, size, page }) {
+
+    return await chatApi.get(`/api/v1/rooms/${roomId}/messages?size=${size}&page=${page}`, {
+    }).then(function (response) {
+        return {
+            flag: true,
+            data: response,
+        }
+    }).catch(function (e) {
+        return {
+            flag: false,
+            message: e.status === 404 ? `Room ${roomId} not Found` : 'Get Messages Failed!'
+        };
+    });
+
+}

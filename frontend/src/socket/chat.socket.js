@@ -1,28 +1,32 @@
-// socket.js
-import { Client } from "@stomp/stompjs";
-import SockJS from "sockjs-client";
-import toast from "../../node_modules/react-hot-toast/dist/index";
+import { Client } from '@stomp/stompjs';
+import { toast } from 'react-hot-toast';
+import SockJS from 'sockjs-client';
 
-export const stompClient = new Client({
-  webSocketFactory: () => new SockJS("http://localhost:3002/chat"),
-  reconnectDelay: 5000,
-  onConnect: () => {
-    toast.success("✅ Connected!");
-  },
-  onDisconnect: () => {
-    toast.error("❌ Disconnected!");
-  },
-});
+export let stompClient = null;
 
-export const connectStomp = () => stompClient.activate();
-export const disconnectStomp = () => stompClient.deactivate();
+export const connectStomp = () => {
+  return new Promise((resolve, reject) => {
+    stompClient = new Client({
+      webSocketFactory: () => new SockJS('http://localhost:3002/chat'),
+      brokerURL: 'ws://localhost:3002/ws',
+      reconnectDelay: 5000,
+      onConnect: () => {
+        toast.success('✅ STOMP connected');
+        resolve();
+      },
+      onStompError: (frame) => {
 
-
-export const subscribeToRoomId = (roomId, callback) => {
-  if (stompClient.connected) {
-    stompClient.subcribe(`/topic/rooms/${roomId}`, (message) => {
-        const msg = JSON.parse(message.body);
-        callback(msg);
+        toast.error('STOMP error', frame);
+        reject(frame);
+      },
     });
+
+    stompClient.activate();
+  });
+};
+
+export const disconnectStomp = () => {
+  if (stompClient && stompClient.connected) {
+    stompClient.deactivate();
   }
-}
+};

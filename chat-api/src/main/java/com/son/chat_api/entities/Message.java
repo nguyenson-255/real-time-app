@@ -1,6 +1,8 @@
 package com.son.chat_api.entities;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -25,7 +27,7 @@ public class Message {
     public Message(String sender, String content) {
         this.sender = sender;
         this.content = content;
-        this.dateTime = LocalDateTime.now();
+        this.dateTime = ZonedDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")).toLocalDateTime();
     }
 
 }
