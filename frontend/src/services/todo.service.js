@@ -9,6 +9,8 @@ export function getTasks(socket, callback) {
 }
 
 export function addTask(socket, task) {
+    console.log(task);
+    
     socket.emit('addTask', task);
 }     
 

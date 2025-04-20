@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import '../css/SignUp.css'
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { Alert, Button, Snackbar, TextField, Typography } from '../../node_modules/@mui/material/index';
-import { register } from '../services/authService';
-import { useAuth } from '../uttil/AuthContext';
+import '../css/SignUp.css';
+import { register } from '../services/auth.service';
+// import { useAuth } from '../uttil/AuthContext';
 
 export default function SignUp() {
 
   let navigate = useNavigate();
-  const { token, loginToken } = useAuth();
+  // const { token, loginToken } = useAuth();
 
   const [field, setField] = useState({
     email: '',
@@ -21,11 +21,11 @@ export default function SignUp() {
   const [message, setMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
 
-  useEffect(() => {
-    if (token) {
-      navigate('/', { replace: true });
-    }
-  }, [token, loginToken]);
+  // useEffect(() => {
+  //   if (token) {
+  //     navigate('/', { replace: true });
+  //   }
+  // }, [token, loginToken]);
 
   useEffect(() => {
     if (isSuccess) {

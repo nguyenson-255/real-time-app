@@ -1,0 +1,30 @@
+apiVersion: skaffold/v4beta1
+kind: Config
+metadata:
+  name: todosocket
+build:
+  artifacts:
+  - image: nguyenson255/todosocket-chat-api
+    context: chat-api
+    docker:
+      dockerfile: Dockerfile
+  - image: nguyenson255/todosocket-be
+    context: todo-api
+    buildpacks:
+      builder: gcr.io/buildpacks/builder:v1
+  - image: nguyenson255/todosocket-fe
+    context: frontend
+    buildpacks:
+      builder: gcr.io/buildpacks/builder:v1
+  - image: postgres
+    context: todo-api
+    buildpacks:
+      builder: gcr.io/buildpacks/builder:v1
+manifests:
+  rawYaml:
+  - k8s/app/fe-depl.yaml
+  - k8s/app/pgadmin-depl.yaml
+  - k8s/app/todo-depl.yaml
+  - k8s/config-secret/postgres-configmap.yaml
+  - k8s/config-secret/postgres-secret.yaml
+  - k8s/database/postgres.yaml

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const api = axios.create({
+const todoApi = axios.create({
     baseURL: `http://${process.env.BASE_URL ?? 'localhost'}:3001`,
     headers: {
       "Content-Type": "application/json",
@@ -9,7 +9,7 @@ const api = axios.create({
 });
 
 // Add a request interceptor
-api.interceptors.request.use(
+todoApi.interceptors.request.use(
   config => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -22,7 +22,7 @@ api.interceptors.request.use(
   }
 )
 
-api.interceptors.response.use(
+todoApi.interceptors.response.use(
   response => {
     return response
   },
@@ -33,7 +33,7 @@ api.interceptors.response.use(
 
     if (
       error.response.status === 401 &&
-      originalRequest.url === `http://${process.env.BASE_URL}:3001/api/users/login`
+      originalRequest.url === `http://${process.env.BASE_URL}:3001/todoApi/users/login`
     ) {
       navigate('/login');
       return Promise.reject(error)
@@ -59,4 +59,4 @@ api.interceptors.response.use(
   }
 )
 
-export default api;
+export default todoApi;

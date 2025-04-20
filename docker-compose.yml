@@ -11,7 +11,7 @@ services:
       - todo-api
       - chat-api
     ports:
-      - "3000:80"
+      - "3000:3000"
     volumes:
       - ./frontend:/son/src/FE-app
       - /son/src/FE-app/node_modules/
@@ -25,7 +25,10 @@ services:
       - mongo
     ports:
       - "3002:8080"
-  
+    volumes:
+      - ./chat-api:/app
+      - ~/.m2:/root/.m2
+
   todo-api:
     build:
       context: ./todo-api
@@ -51,7 +54,7 @@ services:
     restart: always
     environment:
       - POSTGRES_PASSWORD=ns
-      - JWT_SERECT=changeme
+      - JWT_SERECT=MySuperSecureJWTSecretKeyWhichIsAtLeast32Char
     ports:
       - "5432:5432"
     volumes:

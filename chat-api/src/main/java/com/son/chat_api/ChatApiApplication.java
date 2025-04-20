@@ -16,7 +16,7 @@ public class ChatApiApplication {
 
 	@GetMapping("path")
 	public String getMethodName() {
-		return "alo12dss4";
+		return "123sssssssdddddsss";
 	}
 	
 
