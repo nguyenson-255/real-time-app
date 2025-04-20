@@ -1,9 +1,9 @@
-name: 'ToDo App RealTime'
+name: 'ToDo App RealTime Development'
 services:
   fe:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     restart: always
     environment:
       - BASE_URL=todo-api
@@ -11,23 +11,23 @@ services:
       - todo-api
       - chat-api
     ports:
-      - "3000:80"
+      - "3000:3000"
     volumes:
-    #   - ./frontend:/son/src/FE-app
+      - ./frontend:/son/src/FE-app
       - /son/src/FE-app/node_modules/
 
   chat-api:
     build:
       context: ./chat-api
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     restart: always
     depends_on:
       - mongo
     ports:
       - "3002:8080"
-    # volumes:
-    #   - ./chat-api:/app
-    #   - ~/.m2:/root/.m2
+    volumes:
+      - ./chat-api:/app
+      - ~/.m2:/root/.m2
     environment:
       - PORT=8080
       - MONGO_URL=mongodb://user:ns@mongo:27017/admin
@@ -36,7 +36,7 @@ services:
   todo-api:
     build:
       context: ./todo-api
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     restart: always
     depends_on:
       - postgres_app
@@ -48,11 +48,11 @@ services:
     # secrets:
     #   - DATABASE_PASSWORD      
     volumes:
-      # - ./todo-api:/son/src/app
+      - ./todo-api:/son/src/app
       - /son/src/app/node_modules/
     ports:
       - "3001:3001"
-    # command: ["npm", "run", "start:dev"]
+    command: ["npm", "run", "start:dev"]
   postgres_app:
     image: postgres:15
     restart: always
@@ -76,19 +76,19 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=ns
       - MONGO_INITDB_DATABASE=chat
   
-  # mongo_express:
-  #   image: mongo-express
-  #   restart: always
-  #   ports:
-  #     - "8081:8081"
-  #   environment:
-  #     - ME_CONFIG_MONGODB_SERVER=mongo
-  #     - ME_CONFIG_MONGODB_ADMINUSERNAME=user
-  #     - ME_CONFIG_MONGODB_ADMINPASSWORD=ns
-  #     - ME_CONFIG_BASICAUTH_USERNAME=admin
-  #     - ME_CONFIG_BASICAUTH_PASSWORD=ns
-  #   depends_on:
-  #     - mongo
+  mongo_express:
+    image: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=user
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=ns
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=ns
+    depends_on:
+      - mongo
 volumes:
   db_data:
   mongo_data:
