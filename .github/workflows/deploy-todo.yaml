@@ -34,6 +34,6 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: ./todo-api
-        file: ./todo-api/Dockerfile
+        file: ./todo-api/Dockerfile.dev
         push: true
         tags: nguyenson255/todosocket-be

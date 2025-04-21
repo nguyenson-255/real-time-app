@@ -38,7 +38,7 @@ jobs:
       uses: docker/build-push-action@v6
       with:
         context: ./chat-api
-        file: ./chat-api/Dockerfile
+        file: ./chat-api/Dockerfile.dev
         push: true
         tags: nguyenson255/todosocket-chat-api
 
