@@ -16,7 +16,10 @@ spec:
       - name: fe
         image: nguyenson255/todosocket-fe
         ports:
-        - containerPort: 80
+        # development
+        - containerPort: 3000
+        # production
+        # - containerPort: 80
         env:
         - name: BASE_URL_CHAT_API
           value: chat-service
@@ -31,9 +34,14 @@ spec:
   selector:
     app: fe
   ports:
+  # development
   - protocol: TCP
-    port: 80
-    targetPort: 80
+    port: 3000
+    targetPort: 3000
+  # production
+  # - protocol: TCP
+  #   port: 80
+  #   targetPort: 80
   type: LoadBalancer      
 
         
