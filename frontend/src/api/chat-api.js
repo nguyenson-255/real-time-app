@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const chatApi = axios.create({
-    baseURL: `http://${process.env.BASE_URL ?? 'localhost'}:3002`,
+    baseURL: `http://${process.env.BASE_URL_CHAT_API ?? 'localhost'}:3002`,
     headers: {
       "Content-Type": "application/json",
     },
