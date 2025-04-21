@@ -2,29 +2,42 @@ apiVersion: skaffold/v4beta1
 kind: Config
 metadata:
   name: todosocket
-build:
-  artifacts:
-  - image: nguyenson255/todosocket-chat-api
-    context: chat-api
-    docker:
-      dockerfile: Dockerfile
-  - image: nguyenson255/todosocket-be
-    context: todo-api
-    buildpacks:
-      builder: gcr.io/buildpacks/builder:v1
-  - image: nguyenson255/todosocket-fe
-    context: frontend
-    buildpacks:
-      builder: gcr.io/buildpacks/builder:v1
-  - image: postgres
-    context: todo-api
-    buildpacks:
-      builder: gcr.io/buildpacks/builder:v1
-manifests:
-  rawYaml:
-  - k8s/app/fe-depl.yaml
-  - k8s/app/pgadmin-depl.yaml
-  - k8s/app/todo-depl.yaml
-  - k8s/config-secret/postgres-configmap.yaml
-  - k8s/config-secret/postgres-secret.yaml
-  - k8s/database/postgres.yaml
+# build:
+  # artifacts:
+  # - image: todosocket-fe
+  #   context: frontend
+  #   docker:
+  #     dockerfile: Dockerfile.dev
+  #   sync:
+  #     manual:
+  #       - src: frontend/src/**/*.js
+  #         dest: son/src/FE-app/src
+  #       - src: frontend/public/**/*
+  #         dest: son/src/FE-app/public
+  # - image: todosocket-chat-api
+  #   context: chat-api
+  #   docker:
+  #     dockerfile: Dockerfile.dev
+  #   sync:
+  #     manual:
+  #       - src: chat-api/src/main/**/*
+  #         dest: app/src
+    
+  # - image: todosocket-todo-api
+  #   context: todo-api
+  #   docker:
+  #     dockerfile: Dockerfile.dev
+  #   sync:
+  #     manual:
+  #       - src: todo-api/src/**/*.ts
+  #         dest: app/src
+deploy:
+  kubectl:
+    flags:
+      apply:
+      - -f
+      - k8s/config-secret/*.yaml
+      - -f 
+      - k8s/database/*.yaml
+      - -f
+      - k8s/app/*.yaml
