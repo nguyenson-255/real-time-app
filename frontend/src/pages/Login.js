@@ -1,45 +1,44 @@
-import React, { useEffect, useState } from 'react';
-import '../css/Login.css'
+import { useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from "react-router-dom";
-import { Alert, Button, Snackbar, TextField, Typography } from '../../node_modules/@mui/material/index';
-import { login } from '../services/authService';
-import { useAuth } from '../uttil/AuthContext';
+import { Button, TextField, Typography } from '../../node_modules/@mui/material/index';
+import '../css/Login.css';
+import { login } from '../services/auth.service';
+import { login as setToken } from '../slices/authSlice';
+
 
 export default function Login() {
 
-  const { token, loginToken } = useAuth();
+  // const { token, loginToken } = useAuth();
+
+  const token = useSelector((state) => state.auth.token); // Lấy token từ Redux store
+  const dispatch = useDispatch();
 
   let navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState('');
-  const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
     if (token) {
       navigate('/', { replace: true });
     }
-  }, [token, loginToken]);
+  }, [token, setToken]);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const HandleLogin = async () => {
 
     const result = await login({ email: email, password: password });
     if (result.flag === true) {
-      
-      loginToken(result.token)
-      // navigate('/', { replace: true });
-      
+
+      toast.success(result.message)
+      dispatch(setToken(result.token));
+      // loginToken(result.token)
+    } else {
+      toast.error(result.message)
     }
-    setOpen(true)
-    setIsSuccess(result.flag);
-    setMessage(result.message);
     setLoading(false);
   }
 
@@ -47,9 +46,9 @@ export default function Login() {
     <div>
       <form action={HandleLogin}>
         <div className='header'>
-        <Typography variant="h5" component="h5">
-          User Login
-        </Typography>
+          <Typography variant="h5" component="h5">
+            User Login
+          </Typography>
           <Link to="/signup">Go to register</Link>
         </div>
         <TextField type='email' title='Email' placeholder='fill your email' value={email} onChange={(e) => { setEmail(e.target.value) }} required />
@@ -64,32 +63,6 @@ export default function Login() {
           Login
         </Button>
       </form>
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={open}
-        autoHideDuration={2000}
-        onClose={handleClose}
-      >
-        {
-          isSuccess ?
-            <Alert
-              onClose={handleClose}
-              severity="success"
-              variant="filled"
-              sx={{ width: '100%' }}
-            >
-              Login Success !!
-            </Alert> :
-            <Alert
-              onClose={handleClose}
-              severity="error"
-              variant="filled"
-              sx={{ width: '100%' }}
-            >
-              {message}
-            </Alert>
-        }
-      </Snackbar>
     </div>
   );
 }

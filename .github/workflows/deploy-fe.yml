@@ -1,0 +1,39 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: FrontEnd CI And Docker
+
+on:
+  push:
+    branches: [ "master" , "test"]
+    paths:
+      - 'frontend/**'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    -
+      name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    -
+      name: Set up QEMU
+      uses: docker/setup-qemu-action@v3 
+    -
+      name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - 
+      name: Build and push
+      uses: docker/build-push-action@v2
+      with:
+        context: ./frontend
+        file: ./frontend/Dockerfile.dev
+        push: true
+        tags: nguyenson255/todosocket-fe

@@ -18,8 +18,10 @@ spec:
         ports:
         - containerPort: 80
         env:
-        - name: BASE_URL
-          value: be-service
+        - name: BASE_URL_CHAT_API
+          value: chat-service:3002
+        - name: BASE_URL_TODO_API
+          value: todo-service:3001
 ---
 apiVersion: v1
 kind: Service
@@ -32,6 +34,6 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 80
-  type: LoadBalancer
+  type: LoadBalancer      
 
         

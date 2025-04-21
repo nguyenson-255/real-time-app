@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chat
+  template:
+    metadata:
+      labels:
+        app: chat
+    spec:
+      containers:
+      - name: chat
+        image: nguyenson255/todosocket-chat-api
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MONGO_URL
+          value: mongodb://user:ns@mongo:27017/admin
+        - name: SECRET_KEY
+          value: MySuperSecureJWTSecretKeyWhichIsAtLeast32Char
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chat-service
+spec:
+  selector:
+    app: chat
+  ports:
+  - protocol: TCP
+    port: 3002
+    targetPort: 8080
+  type: LoadBalancer      
