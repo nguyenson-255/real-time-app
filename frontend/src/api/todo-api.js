@@ -2,7 +2,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const todoApi = axios.create({
-    baseURL: `http://${process.env.BASE_URL ?? 'localhost'}:3001`,
+    baseURL: `http://${process.env.BASE_URL_TODO_API ?? 'localhost'}:3001`,
     headers: {
       "Content-Type": "application/json",
     },

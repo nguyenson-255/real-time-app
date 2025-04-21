@@ -6,7 +6,8 @@ services:
       dockerfile: Dockerfile.dev
     restart: always
     environment:
-      - BASE_URL=todo-api
+      - BASE_URL_TODO_API=todo-api
+      - BASE_URL_CHAT_API=chat-api
     depends_on:
       - todo-api
       - chat-api
